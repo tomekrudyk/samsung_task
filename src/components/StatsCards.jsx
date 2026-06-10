@@ -71,7 +71,7 @@ function ChevronIcon({ isOpen }) {
   );
 }
 
-function StatDetailsToggle({ panelId, toggleLabel, ariaLabel, isEmpty, resetKey, children }) {
+function StatDetailsToggle({ panelId, toggleLabel, ariaLabel, isEmpty, resetKey, fullWidth = false, children }) {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -87,15 +87,15 @@ function StatDetailsToggle({ panelId, toggleLabel, ariaLabel, isEmpty, resetKey,
   }
 
   return (
-    <div className="mt-3">
+    <div className={`mt-3 min-w-0 ${fullWidth ? 'w-full' : ''}`}>
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
         aria-expanded={isOpen}
         aria-controls={panelId}
-        className="flex w-full items-center justify-between gap-2 rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-left text-sm font-medium text-slate-800 transition-colors hover:bg-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 dark:focus-visible:ring-offset-slate-900"
+        className="flex w-full min-w-0 items-center justify-between gap-2 rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-left text-sm font-medium text-slate-800 transition-colors hover:bg-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 dark:focus-visible:ring-offset-slate-900"
       >
-        <span>{isOpen ? 'Hide details' : toggleLabel}</span>
+        <span className="truncate">{isOpen ? 'Hide details' : toggleLabel}</span>
         <ChevronIcon isOpen={isOpen} />
       </button>
 
@@ -107,11 +107,11 @@ function StatDetailsToggle({ panelId, toggleLabel, ariaLabel, isEmpty, resetKey,
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="overflow-hidden"
+            className="w-full min-w-0 overflow-hidden"
             role="region"
             aria-label={ariaLabel}
           >
-            <div className="pointer-events-none mt-2 max-h-44 overflow-y-auto rounded-lg border border-slate-300 bg-slate-100 p-2 dark:border-slate-600 dark:bg-slate-800">
+            <div className="pointer-events-none mt-2 w-full min-w-0 max-h-44 overflow-y-auto overflow-x-hidden rounded-lg border border-slate-300 bg-slate-100 p-2 dark:border-slate-600 dark:bg-slate-800">
               {children}
             </div>
           </motion.div>
@@ -123,14 +123,14 @@ function StatDetailsToggle({ panelId, toggleLabel, ariaLabel, isEmpty, resetKey,
 
 function UserDetailsList({ users }) {
   return (
-    <ul className="space-y-2" aria-label="User names and emails">
+    <ul className="w-full min-w-0 space-y-2" aria-label="User names and emails">
       {users.map((user) => (
         <li
           key={user.id}
-          className="rounded-md border border-slate-200 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900"
+          className="w-full min-w-0 rounded-md border border-slate-200 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900"
         >
-          <p className="text-sm font-semibold text-slate-900 dark:text-white">{user.name}</p>
-          <p className="mt-0.5 text-xs text-slate-600 dark:text-slate-300">{user.email}</p>
+          <p className="truncate text-sm font-semibold text-slate-900 dark:text-white">{user.name}</p>
+          <p className="mt-0.5 truncate text-xs text-slate-600 dark:text-slate-300">{user.email}</p>
         </li>
       ))}
     </ul>
@@ -181,7 +181,7 @@ export default function StatsCards() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1 }}
-          className="rounded-2xl border border-slate-200/60 bg-white/70 p-5 shadow-glass backdrop-blur-xl dark:border-white/10 dark:bg-white/5"
+          className="min-w-0 rounded-2xl border border-slate-200/60 bg-white/70 p-5 shadow-glass backdrop-blur-xl dark:border-white/10 dark:bg-white/5"
         >
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
@@ -189,42 +189,6 @@ export default function StatsCards() {
               <p className="mt-2 text-3xl font-bold text-slate-900 dark:text-white" aria-live="polite">
                 {statistics[stat.key]}
               </p>
-
-              {stat.details === 'users' && (
-                <StatDetailsToggle
-                  panelId="stat-details-users"
-                  toggleLabel={stat.toggleLabel}
-                  ariaLabel="Filtered user names and emails"
-                  isEmpty={detailData.users.length === 0}
-                  resetKey={detailsResetKey}
-                >
-                  <UserDetailsList users={detailData.users} />
-                </StatDetailsToggle>
-              )}
-
-              {stat.details === 'organizations' && (
-                <StatDetailsToggle
-                  panelId="stat-details-organizations"
-                  toggleLabel={stat.toggleLabel}
-                  ariaLabel="Organization company names"
-                  isEmpty={detailData.organizations.length === 0}
-                  resetKey={detailsResetKey}
-                >
-                  <TextDetailsList items={detailData.organizations} ariaLabel="Company names" />
-                </StatDetailsToggle>
-              )}
-
-              {stat.details === 'countries' && (
-                <StatDetailsToggle
-                  panelId="stat-details-countries"
-                  toggleLabel={stat.toggleLabel}
-                  ariaLabel="Country names"
-                  isEmpty={detailData.countries.length === 0}
-                  resetKey={detailsResetKey}
-                >
-                  <TextDetailsList items={detailData.countries} ariaLabel="Country names" />
-                </StatDetailsToggle>
-              )}
             </div>
 
             <div
@@ -234,6 +198,43 @@ export default function StatsCards() {
               {stat.icon}
             </div>
           </div>
+
+          {stat.details === 'users' && (
+            <StatDetailsToggle
+              panelId="stat-details-users"
+              toggleLabel={stat.toggleLabel}
+              ariaLabel="Filtered user names and emails"
+              isEmpty={detailData.users.length === 0}
+              resetKey={detailsResetKey}
+              fullWidth
+            >
+              <UserDetailsList users={detailData.users} />
+            </StatDetailsToggle>
+          )}
+
+          {stat.details === 'organizations' && (
+            <StatDetailsToggle
+              panelId="stat-details-organizations"
+              toggleLabel={stat.toggleLabel}
+              ariaLabel="Organization company names"
+              isEmpty={detailData.organizations.length === 0}
+              resetKey={detailsResetKey}
+            >
+              <TextDetailsList items={detailData.organizations} ariaLabel="Company names" />
+            </StatDetailsToggle>
+          )}
+
+          {stat.details === 'countries' && (
+            <StatDetailsToggle
+              panelId="stat-details-countries"
+              toggleLabel={stat.toggleLabel}
+              ariaLabel="Country names"
+              isEmpty={detailData.countries.length === 0}
+              resetKey={detailsResetKey}
+            >
+              <TextDetailsList items={detailData.countries} ariaLabel="Country names" />
+            </StatDetailsToggle>
+          )}
         </motion.div>
       ))}
     </div>
