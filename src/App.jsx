@@ -10,7 +10,8 @@ import ErrorState from './components/ErrorState';
 import UserModal from './components/UserModal';
 
 function Dashboard() {
-  const { loading, error, refreshUsers, theme, toggleTheme } = useUsers();
+  const { loading, error, refreshUsers, theme, toggleTheme, users } = useUsers();
+  const isInitialLoad = loading && users.length === 0;
 
   return (
     <div className="min-h-screen">
@@ -71,7 +72,7 @@ function Dashboard() {
       </header>
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        {!loading && !error && (
+        {!isInitialLoad && !error && (
           <>
             <section className="mb-8" aria-label="Statistics">
               <StatsCards />
@@ -88,9 +89,9 @@ function Dashboard() {
         )}
 
         <section aria-label="User list">
-          {loading && <Loading />}
+          {isInitialLoad && <Loading />}
           {error && !loading && <ErrorState />}
-          {!loading && !error && <UserGrid />}
+          {!isInitialLoad && !error && <UserGrid />}
         </section>
       </main>
 

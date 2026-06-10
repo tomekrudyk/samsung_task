@@ -54,11 +54,12 @@ export default function UserModal() {
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
             className="relative w-full max-w-md rounded-2xl border border-slate-200/60 bg-white/95 p-6 shadow-lift backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/95 modal-panel"
+            onClick={(event) => event.stopPropagation()}
           >
             <button
               type="button"
               onClick={closeModal}
-              className="absolute right-4 top-4 rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+              className="absolute right-4 top-4 rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 dark:hover:bg-white/10 dark:hover:text-white"
               aria-label="Close modal"
             >
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -74,7 +75,7 @@ export default function UserModal() {
                   className="h-24 w-24 rounded-2xl object-cover ring-4 ring-white/10"
                 />
                 <span
-                  className={`absolute -bottom-1 -right-1 h-5 w-5 rounded-full border-3 border-slate-900 ${
+                  className={`absolute -bottom-1 -right-1 h-5 w-5 rounded-full border-2 border-white dark:border-slate-900 ${
                     selectedUser.online ? 'bg-emerald-400' : 'bg-red-500'
                   }`}
                   aria-hidden="true"
@@ -88,8 +89,8 @@ export default function UserModal() {
               <span
                 className={`mt-2 rounded-full px-3 py-1 text-sm font-medium ${
                   selectedUser.online
-                    ? 'bg-emerald-500/20 text-emerald-300'
-                    : 'bg-red-500/20 text-red-300'
+                    ? 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300'
+                    : 'bg-red-500/20 text-red-700 dark:text-red-300'
                 }`}
               >
                 {selectedUser.online ? 'Online' : 'Offline'}

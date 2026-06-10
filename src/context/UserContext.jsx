@@ -43,13 +43,12 @@ function loadStoredTheme() {
 }
 
 export function UserProvider({ children }) {
-  const storedFilters = loadStoredFilters();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [search, setSearch] = useState(storedFilters.search);
-  const [debouncedSearch, setDebouncedSearch] = useState(storedFilters.search);
-  const [activeFilter, setActiveFilter] = useState(storedFilters.activeFilter);
+  const [search, setSearch] = useState(() => loadStoredFilters().search);
+  const [debouncedSearch, setDebouncedSearch] = useState(() => loadStoredFilters().search);
+  const [activeFilter, setActiveFilter] = useState(() => loadStoredFilters().activeFilter);
   const [selectedUser, setSelectedUser] = useState(null);
   const [theme, setTheme] = useState(loadStoredTheme);
 
@@ -76,6 +75,7 @@ export function UserProvider({ children }) {
   const loadUsers = useCallback(async () => {
     setLoading(true);
     setError(null);
+    setSelectedUser(null);
 
     try {
       const rawUsers = await fetchUsers();

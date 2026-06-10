@@ -16,7 +16,7 @@ export default function UserCard({ user, onClick }) {
           onClick(user);
         }
       }}
-      role="button"
+      role="listitem"
       tabIndex={0}
       aria-label={`View details for ${user.name}`}
       className="group cursor-pointer rounded-2xl border border-slate-200/60 bg-white/70 p-5 shadow-glass backdrop-blur-xl transition-all duration-300 hover:border-indigo-400/30 hover:bg-white/90 hover:shadow-lift focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-100 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10 dark:focus-visible:ring-offset-slate-900"
@@ -30,7 +30,7 @@ export default function UserCard({ user, onClick }) {
             loading="lazy"
           />
           <span
-            className={`absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-slate-900 ${
+            className={`absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-white dark:border-slate-900 ${
               user.online ? 'bg-emerald-400' : 'bg-red-500'
             }`}
             aria-hidden="true"
@@ -43,8 +43,8 @@ export default function UserCard({ user, onClick }) {
             <span
               className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${
                 user.online
-                  ? 'bg-emerald-500/20 text-emerald-300'
-                  : 'bg-red-500/20 text-red-300'
+                  ? 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300'
+                  : 'bg-red-500/20 text-red-700 dark:text-red-300'
               }`}
             >
               {user.online ? 'Online' : 'Offline'}
@@ -55,7 +55,7 @@ export default function UserCard({ user, onClick }) {
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{user.phone}</p>
 
           <div className="mt-3 flex flex-wrap items-center gap-2">
-            <span className="rounded-lg bg-indigo-500/20 px-2.5 py-1 text-xs font-medium text-indigo-300">
+            <span className="rounded-lg bg-indigo-500/20 px-2.5 py-1 text-xs font-medium text-indigo-700 dark:text-indigo-300">
               {user.company}
             </span>
             <span className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
