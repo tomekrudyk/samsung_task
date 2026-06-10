@@ -111,7 +111,7 @@ function StatDetailsToggle({ panelId, toggleLabel, ariaLabel, isEmpty, resetKey,
             role="region"
             aria-label={ariaLabel}
           >
-            <div className="pointer-events-none mt-2 w-full min-w-0 max-h-44 overflow-y-auto overflow-x-hidden rounded-lg border border-slate-300 bg-slate-100 p-2 dark:border-slate-600 dark:bg-slate-800">
+            <div className="stat-scroll-panel mt-2 w-full min-w-0 max-h-44 rounded-lg border border-slate-300 bg-slate-100 p-2 dark:border-slate-600 dark:bg-slate-800">
               {children}
             </div>
           </motion.div>
@@ -127,7 +127,7 @@ function UserDetailsList({ users }) {
       {users.map((user) => (
         <li
           key={user.id}
-          className="w-full min-w-0 rounded-md border border-slate-200 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900"
+          className="w-full min-w-0 select-none rounded-md border border-slate-200 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900"
         >
           <p className="truncate text-sm font-semibold text-slate-900 dark:text-white">{user.name}</p>
           <p className="mt-0.5 truncate text-xs text-slate-600 dark:text-slate-300">{user.email}</p>
@@ -143,7 +143,7 @@ function TextDetailsList({ items, ariaLabel }) {
       {items.map((item) => (
         <li
           key={item}
-          className="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+          className="select-none rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
         >
           {item}
         </li>
