@@ -20,16 +20,25 @@ export function getUserNameEmailList(users) {
   }));
 }
 
+function getValueCounts(users, getValue) {
+  const counts = new Map();
+
+  users.forEach((user) => {
+    const value = getValue(user);
+    counts.set(value, (counts.get(value) || 0) + 1);
+  });
+
+  return [...counts.entries()]
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+}
+
 export function getOrganizationNames(users) {
-  return [...new Set(users.map((user) => user.company))].sort((a, b) =>
-    a.localeCompare(b)
-  );
+  return getValueCounts(users, (user) => user.company);
 }
 
 export function getCountryNames(users) {
-  return [...new Set(users.map((user) => user.country))].sort((a, b) =>
-    a.localeCompare(b)
-  );
+  return getValueCounts(users, (user) => user.country);
 }
 
 export function getOnlineOfflineCounts(users) {

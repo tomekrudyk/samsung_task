@@ -137,15 +137,23 @@ function UserDetailsList({ users }) {
   );
 }
 
-function TextDetailsList({ items, ariaLabel }) {
+function TextDetailsList({ items, ariaLabel, countLabel }) {
   return (
     <ul className="space-y-1.5" aria-label={ariaLabel}>
       {items.map((item) => (
         <li
-          key={item}
-          className="select-none rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+          key={item.name}
+          className="flex select-none items-center justify-between gap-3 rounded-md border border-slate-200 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900"
         >
-          {item}
+          <span className="min-w-0 truncate text-sm font-medium text-slate-900 dark:text-white">
+            {item.name}
+          </span>
+          <span
+            className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-200"
+            aria-label={`${item.count} ${countLabel}`}
+          >
+            {item.count}
+          </span>
         </li>
       ))}
     </ul>
@@ -220,7 +228,11 @@ export default function StatsCards() {
               isEmpty={detailData.organizations.length === 0}
               resetKey={detailsResetKey}
             >
-              <TextDetailsList items={detailData.organizations} ariaLabel="Company names" />
+              <TextDetailsList
+                items={detailData.organizations}
+                ariaLabel="Company names with user counts"
+                countLabel="users"
+              />
             </StatDetailsToggle>
           )}
 
@@ -232,7 +244,11 @@ export default function StatsCards() {
               isEmpty={detailData.countries.length === 0}
               resetKey={detailsResetKey}
             >
-              <TextDetailsList items={detailData.countries} ariaLabel="Country names" />
+              <TextDetailsList
+                items={detailData.countries}
+                ariaLabel="Country names with user counts"
+                countLabel="users"
+              />
             </StatDetailsToggle>
           )}
         </motion.div>
