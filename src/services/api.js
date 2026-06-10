@@ -8,5 +8,10 @@ export async function fetchUsers() {
   }
 
   const data = await response.json();
+
+  if (!Array.isArray(data.results)) {
+    throw new Error('Invalid API response: expected an array of users.');
+  }
+
   return data.results;
 }

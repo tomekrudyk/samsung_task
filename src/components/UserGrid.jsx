@@ -44,9 +44,7 @@ export default function UserGrid() {
     >
       <AnimatePresence mode="popLayout">
         {filteredUsers.map((user) => (
-          <div key={user.id} role="listitem">
-            <UserCard user={user} onClick={openModal} />
-          </div>
+          <UserCard key={user.id} user={user} onClick={openModal} />
         ))}
       </AnimatePresence>
     </div>

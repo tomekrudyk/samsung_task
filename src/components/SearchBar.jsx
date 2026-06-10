@@ -4,7 +4,7 @@ import { useUsers } from '../hooks/useUsers';
 
 export default function SearchBar() {
   const { search, setSearch } = useUsers();
-  const { register, watch, setValue } = useForm({
+  const { register, watch } = useForm({
     defaultValues: { query: search },
   });
 
@@ -13,10 +13,6 @@ export default function SearchBar() {
   useEffect(() => {
     setSearch(query || '');
   }, [query, setSearch]);
-
-  useEffect(() => {
-    setValue('query', search);
-  }, [search, setValue]);
 
   return (
     <form
