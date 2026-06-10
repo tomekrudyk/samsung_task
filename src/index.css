@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply min-h-screen antialiased;
+  }
+
+  html.dark body {
+    @apply bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white;
+  }
+
+  html:not(.dark) body {
+    @apply bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200 text-slate-900;
+  }
+}
+
+@layer utilities {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}
+
+/* Light theme modal */
+html:not(.dark) .modal-panel {
+  @apply border-slate-200/60 bg-white/95;
+}
