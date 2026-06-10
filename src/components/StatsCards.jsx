@@ -185,7 +185,7 @@ export default function StatsCards() {
         >
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-slate-600 dark:text-slate-300">{stat.label}</p>
+              <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-100">{stat.label}</h3>
               <p className="mt-2 text-3xl font-bold text-slate-900 dark:text-white" aria-live="polite">
                 {statistics[stat.key]}
               </p>

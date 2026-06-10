@@ -3,8 +3,9 @@ export default function Loading() {
     <div
       className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4"
       role="status"
-      aria-label="Loading users"
       aria-live="polite"
+      aria-busy="true"
+      aria-label="Loading users"
     >
       {Array.from({ length: 12 }).map((_, index) => (
         <div

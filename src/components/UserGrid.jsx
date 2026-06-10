@@ -12,9 +12,9 @@ export default function UserGrid() {
         role="status"
         aria-live="polite"
       >
-        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-700/50">
+        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-200 dark:bg-slate-700/50">
           <svg
-            className="h-8 w-8 text-slate-400"
+            className="h-8 w-8 text-slate-600 dark:text-slate-300"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -29,7 +29,7 @@ export default function UserGrid() {
           </svg>
         </div>
         <h3 className="text-lg font-semibold text-slate-900 dark:text-white">No users found</h3>
-        <p className="mt-2 max-w-sm text-sm text-slate-500 dark:text-slate-400">
+        <p className="mt-2 max-w-sm text-sm text-slate-700 dark:text-slate-200">
           Try adjusting your search or filters to find what you&apos;re looking for.
         </p>
       </div>
@@ -37,16 +37,15 @@ export default function UserGrid() {
   }
 
   return (
-    <div
-      className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4"
-      role="list"
-      aria-label="User cards"
+    <ul
+      className="grid list-none grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4"
+      aria-label={`${filteredUsers.length} users`}
     >
       <AnimatePresence mode="popLayout">
         {filteredUsers.map((user) => (
           <UserCard key={user.id} user={user} onClick={openModal} />
         ))}
       </AnimatePresence>
-    </div>
+    </ul>
   );
 }

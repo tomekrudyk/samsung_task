@@ -46,8 +46,7 @@ export default function SearchBar() {
         placeholder="Search by name, email, or company..."
         autoComplete="off"
         {...register('query')}
-        className="w-full rounded-xl border border-slate-200/60 bg-white/70 py-3 pl-12 pr-4 text-slate-900 placeholder-slate-400 shadow-glass backdrop-blur-xl transition-all duration-200 focus:border-indigo-400/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-400/30 dark:border-white/10 dark:bg-white/5 dark:text-white dark:focus:bg-white/10"
-        aria-label="Search users by name, email, or company"
+        className="w-full rounded-xl border border-slate-200/60 bg-white/70 py-3 pl-12 pr-4 text-slate-900 placeholder-slate-500 shadow-glass backdrop-blur-xl transition-all duration-200 focus:border-indigo-400/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-400/30 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder-slate-400 dark:focus:bg-white/10"
       />
     </form>
   );
