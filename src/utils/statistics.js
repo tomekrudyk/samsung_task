@@ -15,7 +15,8 @@ export function calculateStatistics(users) {
 export function getUserNameEmailList(users) {
   return users.map((user) => ({
     id: user.id,
-    label: `${user.name} — ${user.email}`,
+    name: user.name,
+    email: user.email,
   }));
 }
 
