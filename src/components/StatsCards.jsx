@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { useUsers } from '../hooks/useUsers';
 import {
   getCountryNames,
@@ -12,7 +12,6 @@ const STAT_CONFIG = [
     key: 'totalUsers',
     label: 'Total Users',
     details: 'users',
-    toggleLabel: 'Show name and email',
     icon: (
       <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -35,7 +34,6 @@ const STAT_CONFIG = [
     key: 'organizations',
     label: 'Organizations',
     details: 'organizations',
-    toggleLabel: 'Show company names',
     icon: (
       <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -47,7 +45,6 @@ const STAT_CONFIG = [
     key: 'countries',
     label: 'Countries',
     details: 'countries',
-    toggleLabel: 'Show country names',
     icon: (
       <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -57,28 +54,11 @@ const STAT_CONFIG = [
   },
 ];
 
-function ChevronIcon({ isOpen }) {
-  return (
-    <svg
-      className={`h-4 w-4 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      aria-hidden="true"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-    </svg>
-  );
-}
+const RECORDS_PANEL_CLASS =
+  'mt-3 max-h-44 overflow-y-auto rounded-lg border border-slate-300 bg-slate-100 p-2 dark:border-slate-600 dark:bg-slate-800';
 
-function StatDetailsToggle({ panelId, toggleLabel, ariaLabel, isEmpty, resetKey, children }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    setIsOpen(false);
-  }, [resetKey]);
-
-  if (isEmpty) {
+function UserRecords({ users }) {
+  if (!users.length) {
     return (
       <p className="mt-3 text-xs font-medium text-slate-600 dark:text-slate-300" aria-live="polite">
         No items match current filters
@@ -87,68 +67,44 @@ function StatDetailsToggle({ panelId, toggleLabel, ariaLabel, isEmpty, resetKey,
   }
 
   return (
-    <div className="mt-3">
-      <button
-        type="button"
-        onClick={() => setIsOpen((prev) => !prev)}
-        aria-expanded={isOpen}
-        aria-controls={panelId}
-        className="flex w-full items-center justify-between gap-2 rounded-lg border border-slate-300 bg-slate-100 px-3 py-2 text-left text-sm font-medium text-slate-800 transition-colors hover:bg-slate-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 dark:focus-visible:ring-offset-slate-900"
-      >
-        <span>{isOpen ? 'Hide details' : toggleLabel}</span>
-        <ChevronIcon isOpen={isOpen} />
-      </button>
-
-      <AnimatePresence initial={false}>
-        {isOpen && (
-          <motion.div
-            id={panelId}
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden"
-            role="region"
-            aria-label={ariaLabel}
+    <div className={RECORDS_PANEL_CLASS} role="region" aria-label="User names and emails">
+      <ul className="space-y-2">
+        {users.map((user) => (
+          <li
+            key={user.id}
+            className="rounded-md border border-slate-200 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900"
           >
-            <div className="pointer-events-none mt-2 max-h-44 overflow-y-auto rounded-lg border border-slate-300 bg-slate-100 p-2 dark:border-slate-600 dark:bg-slate-800">
-              {children}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <p className="text-sm font-semibold text-slate-900 dark:text-white">{user.name}</p>
+            <p className="mt-0.5 text-xs text-slate-600 dark:text-slate-300">{user.email}</p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
 
-function UserDetailsList({ users }) {
-  return (
-    <ul className="space-y-2" aria-label="User names and emails">
-      {users.map((user) => (
-        <li
-          key={user.id}
-          className="rounded-md border border-slate-200 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900"
-        >
-          <p className="text-sm font-semibold text-slate-900 dark:text-white">{user.name}</p>
-          <p className="mt-0.5 text-xs text-slate-600 dark:text-slate-300">{user.email}</p>
-        </li>
-      ))}
-    </ul>
-  );
-}
+function TextRecords({ items, ariaLabel }) {
+  if (!items.length) {
+    return (
+      <p className="mt-3 text-xs font-medium text-slate-600 dark:text-slate-300" aria-live="polite">
+        No items match current filters
+      </p>
+    );
+  }
 
-function TextDetailsList({ items, ariaLabel }) {
   return (
-    <ul className="space-y-1.5" aria-label={ariaLabel}>
-      {items.map((item) => (
-        <li
-          key={item}
-          className="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
-        >
-          {item}
-        </li>
-      ))}
-    </ul>
+    <div className={RECORDS_PANEL_CLASS} role="region" aria-label={ariaLabel}>
+      <ul className="space-y-1.5">
+        {items.map((item) => (
+          <li
+            key={item}
+            className="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+          >
+            {item}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
@@ -161,11 +117,6 @@ export default function StatsCards() {
       organizations: getOrganizationNames(filteredUsers),
       countries: getCountryNames(filteredUsers),
     }),
-    [filteredUsers]
-  );
-
-  const detailsResetKey = useMemo(
-    () => filteredUsers.map((user) => user.id).join('-'),
     [filteredUsers]
   );
 
@@ -190,40 +141,14 @@ export default function StatsCards() {
                 {statistics[stat.key]}
               </p>
 
-              {stat.details === 'users' && (
-                <StatDetailsToggle
-                  panelId="stat-details-users"
-                  toggleLabel={stat.toggleLabel}
-                  ariaLabel="Filtered user names and emails"
-                  isEmpty={detailData.users.length === 0}
-                  resetKey={detailsResetKey}
-                >
-                  <UserDetailsList users={detailData.users} />
-                </StatDetailsToggle>
-              )}
+              {stat.details === 'users' && <UserRecords users={detailData.users} />}
 
               {stat.details === 'organizations' && (
-                <StatDetailsToggle
-                  panelId="stat-details-organizations"
-                  toggleLabel={stat.toggleLabel}
-                  ariaLabel="Organization company names"
-                  isEmpty={detailData.organizations.length === 0}
-                  resetKey={detailsResetKey}
-                >
-                  <TextDetailsList items={detailData.organizations} ariaLabel="Company names" />
-                </StatDetailsToggle>
+                <TextRecords items={detailData.organizations} ariaLabel="Company names" />
               )}
 
               {stat.details === 'countries' && (
-                <StatDetailsToggle
-                  panelId="stat-details-countries"
-                  toggleLabel={stat.toggleLabel}
-                  ariaLabel="Country names"
-                  isEmpty={detailData.countries.length === 0}
-                  resetKey={detailsResetKey}
-                >
-                  <TextDetailsList items={detailData.countries} ariaLabel="Country names" />
-                </StatDetailsToggle>
+                <TextRecords items={detailData.countries} ariaLabel="Country names" />
               )}
             </div>
 
