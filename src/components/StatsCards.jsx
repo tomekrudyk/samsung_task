@@ -57,6 +57,9 @@ const STAT_CONFIG = [
   },
 ];
 
+const ACTIVE_RECORD_CLASS =
+  'border-indigo-500 bg-indigo-50 ring-2 ring-indigo-400/40 dark:border-indigo-400 dark:bg-indigo-950/50';
+
 function ChevronIcon({ isOpen }) {
   return (
     <svg
@@ -121,60 +124,83 @@ function StatDetailsToggle({ panelId, toggleLabel, ariaLabel, isEmpty, resetKey,
   );
 }
 
-function UserDetailsList({ users }) {
+function UserDetailsList({ users, recordFilter, onSelectUser }) {
   return (
     <ul className="w-full min-w-0 space-y-2" aria-label="User names and emails">
-      {users.map((user) => (
-        <li
-          key={user.id}
-          className="w-full min-w-0 select-none rounded-md border border-slate-200 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900"
-        >
-          <p className="truncate text-sm font-semibold text-slate-900 dark:text-white">{user.name}</p>
-          <p className="mt-0.5 truncate text-xs text-slate-600 dark:text-slate-300">{user.email}</p>
-        </li>
-      ))}
+      {users.map((user) => {
+        const isActive = recordFilter?.type === 'user' && recordFilter.id === user.id;
+
+        return (
+          <li key={user.id} className="w-full min-w-0">
+            <button
+              type="button"
+              onClick={() => onSelectUser(user)}
+              aria-pressed={isActive}
+              aria-label={`Filter users by ${user.name}`}
+              className={`w-full rounded-md border px-3 py-2 text-left transition-colors hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 dark:hover:bg-slate-800 ${
+                isActive
+                  ? ACTIVE_RECORD_CLASS
+                  : 'border-slate-200 bg-white dark:border-slate-600 dark:bg-slate-900'
+              }`}
+            >
+              <p className="truncate text-sm font-semibold text-slate-900 dark:text-white">{user.name}</p>
+              <p className="mt-0.5 truncate text-xs text-slate-600 dark:text-slate-300">{user.email}</p>
+            </button>
+          </li>
+        );
+      })}
     </ul>
   );
 }
 
-function TextDetailsList({ items, ariaLabel, countLabel }) {
+function TextDetailsList({ items, ariaLabel, countLabel, filterType, recordFilter, onSelectItem }) {
   return (
     <ul className="space-y-1.5" aria-label={ariaLabel}>
-      {items.map((item) => (
-        <li
-          key={item.name}
-          className="flex select-none items-center justify-between gap-3 rounded-md border border-slate-200 bg-white px-3 py-2 dark:border-slate-600 dark:bg-slate-900"
-        >
-          <span className="min-w-0 truncate text-sm font-medium text-slate-900 dark:text-white">
-            {item.name}
-          </span>
-          <span
-            className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-200"
-            aria-label={`${item.count} ${countLabel}`}
-          >
-            {item.count}
-          </span>
-        </li>
-      ))}
+      {items.map((item) => {
+        const isActive = recordFilter?.type === filterType && recordFilter.value === item.name;
+
+        return (
+          <li key={item.name} className="w-full">
+            <button
+              type="button"
+              onClick={() => onSelectItem(item.name)}
+              aria-pressed={isActive}
+              aria-label={`Filter users by ${item.name}, ${item.count} ${countLabel}`}
+              className={`flex w-full items-center justify-between gap-3 rounded-md border px-3 py-2 text-left transition-colors hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 dark:hover:bg-slate-800 ${
+                isActive
+                  ? ACTIVE_RECORD_CLASS
+                  : 'border-slate-200 bg-white dark:border-slate-600 dark:bg-slate-900'
+              }`}
+            >
+              <span className="min-w-0 truncate text-sm font-medium text-slate-900 dark:text-white">
+                {item.name}
+              </span>
+              <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                {item.count}
+              </span>
+            </button>
+          </li>
+        );
+      })}
     </ul>
   );
 }
 
 export default function StatsCards() {
-  const { statistics, filteredUsers } = useUsers();
+  const { statistics, baseFilteredUsers, recordFilter, applyRecordFilter } = useUsers();
 
   const detailData = useMemo(
     () => ({
-      users: getUserNameEmailList(filteredUsers),
-      organizations: getOrganizationNames(filteredUsers),
-      countries: getCountryNames(filteredUsers),
+      users: getUserNameEmailList(baseFilteredUsers),
+      organizations: getOrganizationNames(baseFilteredUsers),
+      countries: getCountryNames(baseFilteredUsers),
     }),
-    [filteredUsers]
+    [baseFilteredUsers]
   );
 
   const detailsResetKey = useMemo(
-    () => filteredUsers.map((user) => user.id).join('-'),
-    [filteredUsers]
+    () => baseFilteredUsers.map((user) => user.id).join('-'),
+    [baseFilteredUsers]
   );
 
   return (
@@ -216,7 +242,13 @@ export default function StatsCards() {
               resetKey={detailsResetKey}
               fullWidth
             >
-              <UserDetailsList users={detailData.users} />
+              <UserDetailsList
+                users={detailData.users}
+                recordFilter={recordFilter}
+                onSelectUser={(user) =>
+                  applyRecordFilter({ type: 'user', id: user.id, value: user.name })
+                }
+              />
             </StatDetailsToggle>
           )}
 
@@ -232,6 +264,9 @@ export default function StatsCards() {
                 items={detailData.organizations}
                 ariaLabel="Company names with user counts"
                 countLabel="users"
+                filterType="company"
+                recordFilter={recordFilter}
+                onSelectItem={(name) => applyRecordFilter({ type: 'company', value: name })}
               />
             </StatDetailsToggle>
           )}
@@ -248,6 +283,9 @@ export default function StatsCards() {
                 items={detailData.countries}
                 ariaLabel="Country names with user counts"
                 countLabel="users"
+                filterType="country"
+                recordFilter={recordFilter}
+                onSelectItem={(name) => applyRecordFilter({ type: 'country', value: name })}
               />
             </StatDetailsToggle>
           )}

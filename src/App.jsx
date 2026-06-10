@@ -2,6 +2,7 @@ import { UserProvider } from './context/UserContext';
 import { useUsers } from './hooks/useUsers';
 import SearchBar from './components/SearchBar';
 import FilterBar from './components/FilterBar';
+import RecordFilterChip from './components/RecordFilterChip';
 import StatsCards from './components/StatsCards';
 import UserChart from './components/UserChart';
 import UserGrid from './components/UserGrid';
@@ -96,6 +97,7 @@ function Dashboard() {
               <div className="space-y-4 lg:col-span-2">
                 <SearchBar />
                 <FilterBar />
+                <RecordFilterChip />
               </div>
               <UserChart />
             </section>
